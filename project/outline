@@ -46,3 +46,50 @@ git remote add origin https://github.com/JeffZengkw/cms.git
 git branchi -M master
 
 git push -u origin master
+
+最后配置 .gitignore
+
+作用是让git不提交某些文件
+
+.gitignore 文件的位置要放在 项目文件夹的第一级目录
+
+git commit -m "xxx" 提交在本地代码库中的
+
+提交到远程库中：
+git push -u origin master
+
+3、目录结构
+main.go 文件放在 项目文件夹的 第一级
+
+4、服务启动与Handler管理
+服务启动：
+
+r.RUN()        r := gin.Default()
+
+Handler管理
+
+将Handler的代码放到特点目录中
+r.GET("/ping", func(c *gin.Context) { //func(){} 这个就是handler函数
+		c.JSON(200, gin.H{
+			"msg": "pong",
+		})
+	})
+将func(c *gin.Context) {c.JSON(200, gin.H{
+			"msg": "pong",
+		})
+	}
+放到特定目录中的.go文件里面  在r.GET("/路由",文件夹.handler函数名)
+
+比如：/handlers/system/
+     /handlers/users/
+     /handlers/content/
+
+故：将所有handler代码放在特定的 handlers 文件夹中，再根据业务逻辑分类    
+
+r.GET("/ping", system.Ping)   system.Ping函数定义在system业务目录中的.go文件中的Ping()函数
+
+func Ping(ctx *gin.Context) {
+	ctx.JSON(200, gin.H{
+		"msg": "pong",
+	})
+}
