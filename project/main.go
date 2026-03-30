@@ -12,6 +12,8 @@ import (
 func main() {
 	//解析配置
 	utils.ParseConfig()
+	//设置应用的模式
+	utils.SetMode() //发布模式，后台会少打印很多信息
 
 	//初始化路由引擎
 	r := handlers.InitEngine()

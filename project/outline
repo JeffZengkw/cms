@@ -235,3 +235,44 @@ func main() {
    r.Run()  默认是监听 8080端口
    
    现在去使用配置文件configs.yaml中的端口：r.Run(viper.GetString("app.addr"))
+
+7、应用模式配置
+
+模式分类：——比如 不同模式下面  日志内容 可能不同
+    发布模式
+    调试模式
+    开发模式
+
+针对gin框架来说：它是支持模式的
+
+基于配置，来修改gin的模式： 增加配置项
+
+在configs.yaml中增加一个叫做模式的配置项
+app:
+    mode: "release"
+    addr: "9090"
+
+在utils.config.go中的 默认函数中加入默认 值
+
+接下来是： 设置模式——工具级别
+
+utils/mode.go
+//模式设置函数
+func SetMode() {
+	switch strings.ToLower(viper.GetString("app.mode")) { //strings.ToLower 是为了避免 大小写问题，统一转换为 小写
+	case "release":
+		gin.SetMode(gin.ReleaseMode) //gin框架中的 模式转发方法
+	case "test":
+		gin.SetMode(gin.TestMode)
+	case "debug":
+		fallthrough //fallthrough 只会强制跳到【紧邻的下一个 case】，不是最后一个，也不是跳过所有！
+	default:
+		gin.SetMode(gin.DebugMode)
+	}
+
+}
+
+//gin.Mode() 可以获取当前设置好的 模式
+
+最后在main.go中初始化的时候调用
+

@@ -9,6 +9,7 @@ import (
 // 默认配置
 func defaultConfig() {
 	viper.SetDefault("app.addr", ":8080")
+	viper.SetDefault("app.mode", "debug")
 }
 
 //编辑配置工具
