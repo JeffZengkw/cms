@@ -93,3 +93,35 @@ func Ping(ctx *gin.Context) {
 		"msg": "pong",
 	})
 }
+
+5、将路由集中管理
+
+思路：
+    原则：路由变动，不修改main.go这个文件
+    
+    路径：将初始化路由引擎的操作单独处理
+          再根据业务，将路由分散到具体的业务处理中。业务目录 就是考虑 handlers/子目录
+    
+    方法：增加文件handlers/init.go 初始化文件用于初始化和handler相关的内容，包括路由：
+         
+//初始化路由引擎——做了单独的处理
+
+func InitEngine() *gin.Engine {
+	r := gin.Default()
+
+	r.GET("/ping", Ping)
+	return r
+}
+
+import (
+	"gotest/project/handlers/system"
+)
+
+//现在目录的入口文件 main函数 仅需要调用 InitEngine（）函数 接收返回来的 *gin.Engine 数据
+//
+func main() {
+	r := system.InitEngine()
+	r.Run()
+}
+
+//根据业务，将路由分散到具体的业务处理中，不用一来就把所有的路由初始化
