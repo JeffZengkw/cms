@@ -125,3 +125,113 @@ func main() {
 }
 
 //根据业务，将路由分散到具体的业务处理中，不用一来就把所有的路由初始化
+
+比如：
+    在handlers/system/router.go 中完成 system相关的路由的初始化；
+    同理，如果content业务中有相关路由，
+    就在 handlers/content/router.go中 完成  content相关的路由初始化;
+
+
+6、管理配置文件
+
+配置文件的核心操作：
+    存储配置
+    解析配置
+    使用配置
+
+1）存储配置：
+    通常将配置存储在特定格式的配置文件中，例如：
+    json
+    yaml
+    xml
+    ini
+以yaml格式为例，存储配置
+
+创建配置文件：
+    configs.yaml
+内容:
+    app:
+        addr: ":8080"
+
+configs.yaml 配置文件不是程序源码的一部分，是独立的文件。最终会存在一个程序的执行性程序和配置文件：
+    A、程序 server.exe
+    B、配置文件 configs.yaml
+
+2）解析配置
+
+核心操作：
+    读取文件内容
+    解析内容到特定格式
+
+解析的时候，往往需要附加操作：
+    不同配置格式的支持
+    不同位置的支持
+    不同存储方式的支持
+    默认值
+
+实操的时候，配置内容还可以来自其他服务，比如 nacos服务
+
+推荐使用viper包来实现配置的解析：https://github.com/spf13/viper  第三方包
+
+viper包的特性：
+    默认配置
+    从JSON，TOML，YAML属性配置文件读取数据
+    实时查看和重新读取配置文件
+    从环境变量中读取
+    从远程配置系统（如：etcd）读取数据并监听变化
+    从命令行参数读取
+    从buffer中读取
+    设置显示值
+
+按照viper包
+go get github.com/spf13/viper
+
+编写viper初始配置函数
+viper也是核心工具，集中管理。路径： utils/config.go  
+
+新增目录 utils  用来管理系统中用到的工具
+编写解析配置文件的函数：
+// 默认配置
+func defaultConfig() {
+	viper.SetDefault("app.addr", ":8080")
+}
+
+//编辑配置工具
+
+func ParseConfig() {
+	//默认配置
+	defaultConfig() //调用函数完成
+	//配置解析参数
+	viper.AddConfigPath(".")       //从哪些目录搜索config文件
+	viper.SetConfigName("configs") //文件名和后缀分开，这里填文件名，下一个 type填格式
+	viper.SetConfigType("yaml")    //配置类型（格式）
+
+	//执行解析，调用viper的ReadInConfig()方法
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatal(err)
+
+	}
+
+}
+
+在项目初始化时调用配置解析，在比较靠前的位置处理配置文件的情况
+在main.go函数中处理
+
+通常第一步就是处理配置文件的信息
+func main() {
+	//解析配置
+	utils.ParseConfig()
+
+	//初始化路由引擎
+	r := handlers.InitEngine()
+	r.Run()
+}
+
+3）使用配置
+
+   以配置监听端口为例：
+   
+   main.go
+   r.Run()  默认是监听 8080端口
+   
+   现在去使用配置文件configs.yaml中的端口：r.Run(viper.GetString("app.addr"))
