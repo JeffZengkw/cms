@@ -20,3 +20,29 @@ Initialized empty Git repository in E:/gotest/.git/
 
 2）做第一次提交
 现在联系做手动提交，实操的时候按照自己的习惯来
+
+创建全局的 用户名字和 email
+git config --global user.name "jeff"
+git config --global user.email "xxx"
+
+
+
+清除：git rm --cached .   本地所有
+
+git add xxx    添加具体需要上传的文件或文件夹
+ 
+git commit -m "版本"
+
+3）远程版本库
+先在远程git中 创建代码库
+比如：代码库 cms
+
+默认产生的库版本是 master
+
+再远程合并
+命令:
+git remote add origin https://github.com/JeffZengkw/cms.git
+
+git branchi -M master
+
+git push -u origin master

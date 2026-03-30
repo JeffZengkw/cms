@@ -1,0 +1,52 @@
+# 1. 系统自动生成的文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 2. 编辑器/IDE 生成的文件
+.idea/
+.vscode/
+
+*.swp
+*.swo
+*~
+
+# 3. 日志文件
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# 4. 依赖包 / 第三方库（不需要提交）
+node_modules/
+vendor/
+coverage/
+/.pnp
+.pnp.js
+
+# 5. 编译/打包生成的文件
+dist/
+build/
+out/
+*.o
+*.obj
+
+# 6. 环境变量、密码、私密配置
+.env
+.env.local
+.env.*.local
+config.ini
+secret.json
+
+# 7. 临时文件、缓存
+*.tmp
+*.temp
+/tmp
+/cache
+
+#忽略part01整个文件夹
+part01/
