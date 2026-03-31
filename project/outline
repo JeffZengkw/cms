@@ -357,3 +357,57 @@ utils/log.go  setLoggerWriter 这个函数
 工作内容：
     启动数据库，与代码无关。只需要得到dsn即可
     连接数据库服务
+
+连接数据库服务
+
+提前完成的工作：
+    1)使用配置管理DSN  //DSN(dsn): DSN=Data Source Name  数据源名称= 一串告诉程序怎么连接数据库的 字符串
+    configs.yaml    所以放在config文件中
+
+dsn 包含了： 用户名
+            密码
+            地址
+            端口
+            数据库名
+            字符集
+            超时时间
+
+dsn: 用户名：密码@tcp(地址：端口)/数据库名?charset=utf8mb4&parseTime=True&loc=Local
+
+     2)增加默认，在config.go中
+
+建立连接数据库的方法，然后再在main函数中去调用----利用GORM来操作数据库
+
+    1、按照GORM
+       go get gorm.io/gorm
+       go get gorm.io/driver/mysql
+
+       
+    2、增加连接数据库的方法
+       utils/db.go
+       gormLogger.New(log.New(LogWriter(), "\n", log.LstdFlags), gormLogger.Config{
+        SlowThreshold:             time.Second, //超过1s的 认为是慢查询
+		Colorful:                  false,
+		IgnoreRecordNotFoundError: false,
+		ParameterizedQueries:      false,
+		LogLevel:                  logLevel,
+       }
+
+       LogWriter() 表示日志输出到控制台，也可以输出到某个文件中 file log.New(file,)
+       "\n" 每条日志换行符，表示打印了一行日志后，自动换行
+       log.LstdFlags   日志自带标准时间格式
+ 
+       Colorful:                  false,    改成true 打印彩色日志，好看
+       IgnoreRecordNotFoundError: false,    忽略 记录不存在 错误
+       
+       Loglevel：    
+       
+       Silent：不输出
+       Error：只打印错误
+       Warn：打印警告 + 错误
+       Info：打印所有 SQL（开发用）
+
+       3)在main中调用数据库连接初始化函数  
+       4)在应用中需要用到数据库，则是下面代码
+       使用方法 是 在业务逻辑函数（handler函数）中 使用：
+        utils.DB().xxx()  这里封装了很多方法，实现增删改查

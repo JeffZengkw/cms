@@ -16,6 +16,8 @@ func main() {
 	utils.SetMode() //发布模式，后台会少打印很多信息
 	//初始化日志
 	utils.SetLogger()
+	//初始化数据库连接
+	utils.InitDB()
 
 	//初始化路由引擎
 	r := handlers.InitEngine()

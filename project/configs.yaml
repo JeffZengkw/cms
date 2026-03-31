@@ -1,5 +1,9 @@
 app:
   addr: ":9090"
-  mode: "release"  #release,debug,test 三种模式   开发阶段是 debug模式  release是发布阶段产品
+  mode: "debug"  #release,debug,test 三种模式   开发阶段是 debug模式  release是发布阶段产品
   log:
     path: "./logs"
+
+db:
+  dsn: root:jeff1104@tcp(10.0.45.121:3306)/cms?charset=utf8mb4&parseTime=True&loc=Local
+  
