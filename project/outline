@@ -276,3 +276,84 @@ func SetMode() {
 
 最后在main.go中初始化的时候调用
 
+8、管理日志
+
+本质：将日志的存储位置进行管理
+
+推荐使用  Logrus
+过去很流行的一个结构化的日志包
+
+现在推荐 slog---标准库中提供的结构化日志包
+
+slog是系统中的日志包
+
+log/slog
+
+工作：
+    设置集中的日志 Writer
+    配置日志的信息，例如格式等
+
+A、设置集中日志Writer
+增加日志工具------用于初始化logger
+utils/log.go这个文件
+
+最后需要在服务初始化的时候设置日志，那么就需要在main.go中完成 初始化的调用
+
+B、使用日志
+调用日志函数
+
+utils.Logger().Info("msg", "key", value)
+
+utils.Logger().Info("日志信息",键1，值1，键2，值2)
+
+utils.Logger().Info("service is listening on ", "addr", viper.GetString("app.addr"))
+
+注意： 项目中涉及的 路径 “ . ”   . 是指 项目的名称， 这里就是 gotest 这个目录名
+
+要背诵
+对于系统文件创建：
+① 追加写入（不覆盖）
+os.O_WRONLY | os.O_APPEND
+② 追加 + 文件不存在就创建（最常用）
+os.O_WRONLY | os.O_APPEND | os.O_CREATE
+③ 覆盖写入（清空再写）
+os.O_WRONLY | os.O_TRUNC
+
+os.MkdirAll 创建目录，目录不存在就创建它
+使用它之前要先 获取 路径上的目录
+
+dir := filePath.Dir(完整路径)
+
+os.MkdirAll(dir,0666)
+
+C、日志分割——避免某一个日志过大
+
+分割的逻辑：
+    日期分割——按日期分割是比较好的标准，因为查日志的时候多数是按照 日期查找
+    尺寸分割
+    其他属性
+
+选择基于mouth月创建日志文件：
+    比如：app-202603.log  3月份就是03 4月份就是04
+
+基于时间来创建日志文件名：
+
+首先、配置日志的存储目录
+    
+    需要在config中增加配置项：
+    configs.yaml
+
+设置默认，“默认就是在没有其他需求的时候，将一些东西写死”
+在config.go中设置
+viper.SetDefault("key","value")  //在配置文件中没有修改或标注的时候，该配置生效
+
+其次：
+utils/log.go  setLoggerWriter 这个函数
+
+不能写死 文件名称和路径，添加变量
+
+9、初始化数据库连接
+
+工作内容：
+    启动数据库，与代码无关。只需要得到dsn即可
+    连接数据库服务

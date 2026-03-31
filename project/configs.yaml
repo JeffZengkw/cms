@@ -1,3 +1,5 @@
 app:
   addr: ":9090"
   mode: "release"  #release,debug,test 三种模式   开发阶段是 debug模式  release是发布阶段产品
+  log:
+    path: "./logs"

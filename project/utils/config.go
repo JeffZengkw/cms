@@ -10,6 +10,7 @@ import (
 func defaultConfig() {
 	viper.SetDefault("app.addr", ":8080")
 	viper.SetDefault("app.mode", "debug")
+	viper.SetDefault("app.log.path", "./logs")
 }
 
 //编辑配置工具
